@@ -1,4 +1,4 @@
-# sentry
+# sentry-quick-start
 Sentry Docker Quick Start
 
 ```bash
