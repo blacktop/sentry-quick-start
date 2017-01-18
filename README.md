@@ -9,6 +9,8 @@ Getting Started
 > **NOTE:** update configuration in `.env` file
 
 ```bash
+$ git clone https://github.com/blacktop/sentry-quick-start.git
+$ cd sentry-quick-start
 $ SENTRY_URL=sentry.blacktop.io make sentry
 ```
 
