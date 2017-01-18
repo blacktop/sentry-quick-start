@@ -27,7 +27,7 @@ Should this user be a superuser? [y/N]: y
 ### Add more workers
 
 ```bash
-$ docker-compose scale worker=3
+$ SENTRY_SECRET_KEY=secret docker-compose scale worker=3
 ```
 
 ### Added Auth Plugins
