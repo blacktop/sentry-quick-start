@@ -1,0 +1,8 @@
+# Ignore .git folder
+.git/
+.gitignore
+
+LICENSE
+README.md
+docker-compose.yml
+quick-start.sh

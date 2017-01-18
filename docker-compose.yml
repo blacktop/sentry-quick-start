@@ -1,20 +1,26 @@
 version: "2"
 
 services:
+  ###################
+  # SENTRY SERVICES #
+  ###################
   sentry:
-    image: sentry
-    ports:
-      - "80:9000"
+    build: sentry/.
+    restart: unless-stopped
     links:
       - redis
       - postgres
+      - smtp
     environment:
       - SENTRY_SECRET_KEY
     volumes:
       - sentry-data:/var/lib/sentry/files
+    env_file: .env
+    command: run web
 
   cron:
-    image: sentry
+    build: sentry/.
+    restart: unless-stopped
     links:
       - redis
       - postgres
@@ -22,10 +28,12 @@ services:
       - SENTRY_SECRET_KEY
     volumes:
       - sentry-data:/var/lib/sentry/files
+    env_file: .env
     command: run cron
 
   worker:
-    image: sentry
+    build: sentry/.
+    restart: unless-stopped
     links:
       - redis
       - postgres
@@ -33,19 +41,37 @@ services:
       - SENTRY_SECRET_KEY
     volumes:
       - sentry-data:/var/lib/sentry/files
+    env_file: .env
     command: run worker
 
+  ###################
+  # OTHER SERVICES ##
+  ###################
+  smtp:
+    image: tianon/exim4
+
+  nginx:
+    build: nginx/.
+    restart: unless-stopped
+    links:
+      - sentry
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      - NGINX_HOST
+    command: /bin/bash -c "envsubst '\$$NGINX_HOST' < /etc/nginx/conf.d/sentry.template > /etc/nginx/nginx.conf && nginx -g 'daemon off;'"
+
+  ###################
+  # DATABASES #######
+  ###################
   redis:
-    image: redis
-  # nginx:
-  #   build: nginx/.
-  #   depends_on:
-  #     - sentry
-  #   ports:
-  #     - "80:80"
-  #     - "443:443"
+    image: redis:3.2-alpine
+    restart: unless-stopped
+
   postgres:
-    image: postgres
+    image: postgres:9.5
+    restart: unless-stopped
     environment:
       POSTGRES_USER: sentry
       POSTGRES_PASSWORD: secret
@@ -54,6 +80,9 @@ services:
     volumes:
       - postgres-data:/var/lib/postgresql/data/pgdata
 
+###########
+# VOLUMES #
+###########
 volumes:
   sentry-data:
   postgres-data:
