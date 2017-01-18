@@ -10,7 +10,7 @@ db:
 
 upgrade: db
 	docker-compose build sentry
-	SENTRY_SECRET_KEY='$(SECRET_KEY)' docker-compose run --rm sentry upgrade --noinput
+	SENTRY_SECRET_KEY='$(SECRET_KEY)' docker-compose run --rm sentry upgrade
 
 sentry: certs upgrade
 	SENTRY_SECRET_KEY='$(SECRET_KEY)' NGINX_HOST='$(SENTRY_URL)' docker-compose up -d
