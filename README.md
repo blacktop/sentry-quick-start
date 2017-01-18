@@ -1,7 +1,7 @@
 sentry-quick-start
 ==================
 
-Sentry Docker Quick Start
+[Sentry](https://docs.sentry.io) Docker Quick Start
 
 Getting Started
 ---------------
