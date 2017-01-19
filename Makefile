@@ -1,5 +1,5 @@
-SENTRY_URL=localhost
-SECRET_KEY=$(shell docker run --rm sentry config generate-secret-key)
+SENTRY_URL?=localhost
+SECRET_KEY?=$(shell docker run --rm sentry config generate-secret-key)
 
 certs:
 	test -f nginx/certs/sentry.key || openssl req -x509 -nodes -days 3650 -newkey rsa:4096 -keyout nginx/certs/sentry.key -out nginx/certs/sentry.crt -subj '/CN=$(SENTRY_URL)'
